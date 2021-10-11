@@ -1,0 +1,6 @@
+{% block content %}
+<h2>Uploaded Image</h2>
+    {% for i in image %}
+        <img src="{{ i.origin_image.url }}"/>
+    {% endfor %}
+{% endblock %}
