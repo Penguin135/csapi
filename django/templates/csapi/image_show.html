@@ -1,0 +1,9 @@
+{% block content %}
+    <h2>Uploaded Image</h2>
+    <img src="{{ origin_image.origin_image.url }}"/>
+    {% if separated_image %}
+        <h5>image is here! context : {{ separated_image }}</h5>
+    {% else %}
+        <h5>image is not here!</h5>
+    {% endif %}
+{% endblock %}
