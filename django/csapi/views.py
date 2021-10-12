@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import OriginImage
+from .models import SeparatedImage
 from .forms import UploadForm
 
 # login required
@@ -27,7 +28,12 @@ def upload(request):
     })
 
 def origin_image_show(request, image_id):
-    origin_image = OriginImage.objects.filter(id=image_id)
+    origin_image = OriginImage.objects.get(id=image_id)
+    try:
+        separated_image = SeparatedImage.objects.get(origin_image_id=image_id)
+    except SeparatedImage.DoesNotExist:
+        separated_image = None
     return render(request, 'csapi/image_show.html', {
-        'image' : origin_image,
+        'origin_image' : origin_image,
+        'separated_image' : separated_image,
     })
