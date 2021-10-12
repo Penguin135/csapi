@@ -1,0 +1,34 @@
+version: "3"
+services:
+  django:
+    build:
+      context: ./django
+    image: csapi-django:test
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - image_volume:/csapi/media
+
+  worker:
+    build:
+      context: ./django
+    image: csapi-django:test
+    command: celery -A config worker --loglevel=info --max-tasks-per-child 1 -c 1
+    tty: true
+    volumes:
+      - image_volume:/csapi/media
+
+  rabbit:
+    image: rabbitmq:3-management
+    #expose:
+    #  - "5672"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+
+volumes:
+  image_volume: {}
