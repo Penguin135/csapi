@@ -40,7 +40,7 @@ class fashion_tools(object):
         return None
 
 
-#@shared_task
+@shared_task
 def startAPI(image_url, origin_image_id):
     image_name = image_url.split('/')[3]
     saved = load_model("/csapi/save_ckp_frozen.h5")

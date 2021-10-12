@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'csapi',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': '192.168.252.101',
+        'HOST': '13.125.49.85',
         'PORT': '3306'
     }
 }
@@ -134,3 +134,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
+
+# celery
+BROKER_URL = 'amqp://guest:guest@rabbit:5672//'
+CELERY_RESULT_BACKEND = 'rpc://'
