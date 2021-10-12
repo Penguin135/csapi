@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 import tensorflow as tf
+from .models import SeparatedImage
+from .models import OriginImage
 
 class fashion_tools(object):
     def __init__(self,imageid,model,version=1.1):
@@ -38,13 +40,15 @@ class fashion_tools(object):
         return None
 
 
-@shared_task
-def startAPI(image_url):
-    print(image_url)
-    saved = load_model("../save_ckp_frozen.h5")
-    api = fashion_tools(image_url, saved)
-    separated_image = api.get_dress(False)
-
-    print('task ID :', current_task.request.id)
-    cv2.imwrite(image_url, separated_image)
-    return current_task.request.id
+#@shared_task
+def startAPI(image_url, origin_image_id):
+    image_name = image_url.split('/')[3]
+    saved = load_model("/csapi/save_ckp_frozen.h5")
+    api = fashion_tools('/csapi' + image_url, saved)
+    processed_separated_image = api.get_dress(False)
+    cv2.imwrite('/csapi/media/separated_images/'+image_name, processed_separated_image)
+    separated_image = SeparatedImage()
+    separated_image.origin_image = OriginImage.objects.get(id=origin_image_id)
+    separated_image.separated_image = 'separated_images/'+image_name
+    separated_image.save()
+    return separated_image.id

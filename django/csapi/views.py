@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from .models import OriginImage
 from .models import SeparatedImage
 from .forms import UploadForm
-
+from .tasks import startAPI
 # login required
 from django.contrib.auth.decorators import login_required
 
@@ -33,6 +33,7 @@ def origin_image_show(request, image_id):
         separated_image = SeparatedImage.objects.get(origin_image_id=image_id)
     except SeparatedImage.DoesNotExist:
         separated_image = None
+        startAPI(origin_image.origin_image.url, image_id)
     return render(request, 'csapi/image_show.html', {
         'origin_image' : origin_image,
         'separated_image' : separated_image,
